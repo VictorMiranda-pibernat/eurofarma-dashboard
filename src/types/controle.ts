@@ -41,6 +41,19 @@ export type ProcessoImportacao = {
 
   // 8. Protocolo x deferimento LI
   data_deferimento_li?: string | null
+    // Etapas de desembaraço e pós-chegada
+  data_chegada_ata?: string | null
+  data_presenca?: string | null
+  data_registro_di?: string | null
+  data_desembaraco?: string | null
+  data_solicitacao_danfe?: string | null
+  data_emissao_danfe?: string | null
+  data_liberacao_transporte?: string | null
+  data_saida_recinto?: string | null
+  data_entrega_fabrica?: string | null
+
+  // Identifica processos com ou sem LI
+  possui_li?: boolean
 }
 
 export type StatusPrazo =
