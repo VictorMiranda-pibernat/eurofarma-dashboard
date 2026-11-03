@@ -5,6 +5,7 @@ import {
   ChartNoAxesCombined,
   PackageCheck,
   Truck,
+  Container,
 } from 'lucide-react'
 
 type NavbarProps = {
@@ -22,6 +23,7 @@ export function Navbar({
     { nome: 'Indicadores', icone: ChartNoAxesCombined },
     { nome: 'Desembaraço', icone: PackageCheck },
     { nome: 'Logística e Entregas', icone: Truck },
+    { nome: 'Gestão de Containers', icone: Container },
   ]
 
   return (

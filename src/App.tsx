@@ -6,6 +6,7 @@ import { Prontidao } from './pages/Prontidao'
 import { Indicadores } from './pages/Indicadores'
 import { Desembaraco } from './pages/Desembaraco'
 import { Logistica } from './pages/Logistica'
+import { GestaoContainers } from './pages/GestaoContainers'
 
 function App() {
   const [paginaAtiva, setPaginaAtiva] = useState('Home')
@@ -17,6 +18,7 @@ function App() {
       {paginaAtiva === 'Indicadores' && <Indicadores />}
       {paginaAtiva === 'Desembaraço' && <Desembaraco />}
       {paginaAtiva === 'Logística e Entregas' && <Logistica />}
+      {paginaAtiva === 'Gestão de Containers' && <GestaoContainers />}
     </Layout>
   )
 }
