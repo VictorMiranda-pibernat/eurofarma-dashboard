@@ -1,4 +1,9 @@
-import { House, ClipboardList } from 'lucide-react'
+
+import {
+  House,
+  ClipboardList,
+  ChartNoAxesCombined,
+} from 'lucide-react'
 
 type NavbarProps = {
   paginaAtiva: string
@@ -12,6 +17,7 @@ export function Navbar({
   const itens = [
     { nome: 'Home', icone: House },
     { nome: 'Prontidão', icone: ClipboardList },
+    { nome: 'Indicadores', icone: ChartNoAxesCombined },
   ]
 
   return (

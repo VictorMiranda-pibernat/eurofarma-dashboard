@@ -151,16 +151,29 @@ export function calcularProcessos(
   dataInicio: keyof ProcessoImportacao,
   dataFim: keyof ProcessoImportacao,
   slaPorModal: ConfiguracaoSla,
-  calendario: CalendarioOperacional = calendarioPadrao,
+  calendario: CalendarioOperacional | Record<Modal, CalendarioOperacional> = calendarioPadrao,
 ): ProcessoComPrazo[] {
   return dados.map((processo) => {
     const inicio = processo[dataInicio] as string | null
     const fim = processo[dataFim] as string | null
 
-    const horas = calcularHorasUteis(inicio, fim, calendario)
-    const dias = Number((horas / 24).toFixed(2))
-
     const modal = identificarModal(processo.modal)
+
+    // Aceita tanto um calendário único quanto um calendário por modal.
+    const calendarioSelecionado =
+      'diasConsiderados' in calendario
+        ? calendario
+        : modal
+          ? calendario[modal]
+          : calendarioPadrao
+
+    const horas = calcularHorasUteis(
+      inicio,
+      fim,
+      calendarioSelecionado,
+    )
+
+    const dias = Number((horas / 24).toFixed(2))
 
     let farol: StatusPrazo = 'Pendente'
 
