@@ -1,3 +1,5 @@
+import type { ConfiguracaoSla } from './metricas'
+
 export type ProcessoImportacao = {
   status: string
   referencia_cliente: string
@@ -10,6 +12,7 @@ export type ProcessoImportacao = {
   data_recebimento_pedido: string | null
   data_recebimento_proforma: string | null
   data_conferencia_proforma: string | null
+  data_disponibilidade: string | null
 }
 
 export type StatusPrazo =
@@ -20,6 +23,7 @@ export type StatusPrazo =
   | 'Pendente'
 
 export type ProcessoComPrazo = ProcessoImportacao & {
+  horas: number
   dias: number
   farol: StatusPrazo
 }
@@ -34,4 +38,5 @@ export type ConfiguracaoControle = {
   dataInicio: keyof ProcessoImportacao
   dataFim: keyof ProcessoImportacao
   colunas: ColunaTabela[]
+  slaPorModal: ConfiguracaoSla
 }

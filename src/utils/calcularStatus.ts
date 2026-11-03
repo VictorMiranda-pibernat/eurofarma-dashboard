@@ -4,58 +4,96 @@ import type {
   StatusPrazo,
 } from '../types/controle'
 
+import type {
+  ConfiguracaoSla,
+  Modal,
+} from '../types/metricas'
+
 function converterData(valor: string | null): Date | null {
   if (!valor) return null
 
-  const partesBR = valor.match(/^(\d{2})\/(\d{2})\/(\d{4})$/)
+  // Data brasileira: DD/MM/AAAA
+  const partesBR = valor.match(
+    /^(\d{2})\/(\d{2})\/(\d{4})$/,
+  )
 
-  const data = partesBR
-    ? new Date(
-        Number(partesBR[3]),
-        Number(partesBR[2]) - 1,
-        Number(partesBR[1]),
-      )
-    : new Date(`${valor.slice(0, 10)}T00:00:00`)
+  if (partesBR) {
+    return new Date(
+      Number(partesBR[3]),
+      Number(partesBR[2]) - 1,
+      Number(partesBR[1]),
+    )
+  }
+
+  // Data ISO sem horário: AAAA-MM-DD
+  const partesISO = valor.match(
+    /^(\d{4})-(\d{2})-(\d{2})$/,
+  )
+
+  if (partesISO) {
+    return new Date(
+      Number(partesISO[1]),
+      Number(partesISO[2]) - 1,
+      Number(partesISO[3]),
+    )
+  }
+
+  // Data ISO com horário
+  const data = new Date(valor)
 
   return Number.isNaN(data.getTime()) ? null : data
 }
 
-function calcularDias(
+function calcularHoras(
   inicio: string | null,
   fim: string | null,
 ): number {
   const dataInicio = converterData(inicio)
-  const dataFim = fim
-    ? converterData(fim)
-    : new Date()
+  const dataFim = fim ? converterData(fim) : new Date()
 
   if (!dataInicio || !dataFim) return 0
 
-  const inicioDia = new Date(
-    dataInicio.getFullYear(),
-    dataInicio.getMonth(),
-    dataInicio.getDate(),
-  )
-
-  const fimDia = new Date(
-    dataFim.getFullYear(),
-    dataFim.getMonth(),
-    dataFim.getDate(),
-  )
-
   const diferenca =
-    fimDia.getTime() - inicioDia.getTime()
+    dataFim.getTime() - dataInicio.getTime()
 
-  return Math.max(
-    0,
-    Math.floor(diferenca / (1000 * 60 * 60 * 24)),
-  )
+  const horas = diferenca / (1000 * 60 * 60)
+
+  return Math.max(0, Number(horas.toFixed(2)))
 }
 
-export function classificarPrazo(dias: number): StatusPrazo {
-  if (dias <= 1) return 'Dentro do Prazo'
-  if (dias === 2) return 'Atenção'
-  if (dias <= 4) return 'Alerta'
+function identificarModal(modal: string): Modal | null {
+  const valor = modal.trim().toLowerCase()
+
+  if (valor === 'aéreo' || valor === 'aereo') {
+    return 'Aéreo'
+  }
+
+  if (valor === 'marítimo' || valor === 'maritimo') {
+    return 'Marítimo'
+  }
+
+  if (valor === 'rodoviário' || valor === 'rodoviario') {
+    return 'Rodoviário'
+  }
+
+  return null
+}
+
+export function classificarPrazoPorHoras(
+  horas: number,
+  faixas: ConfiguracaoSla[keyof ConfiguracaoSla],
+): StatusPrazo {
+  if (horas <= faixas.verdeAteHoras) {
+    return 'Dentro do Prazo'
+  }
+
+  if (horas <= faixas.atencaoAteHoras) {
+    return 'Atenção'
+  }
+
+  if (horas <= faixas.alertaAteHoras) {
+    return 'Alerta'
+  }
 
   return 'Atraso'
 }
@@ -64,19 +102,29 @@ export function calcularProcessos(
   dados: ProcessoImportacao[],
   dataInicio: keyof ProcessoImportacao,
   dataFim: keyof ProcessoImportacao,
+  slaPorModal: ConfiguracaoSla,
 ): ProcessoComPrazo[] {
   return dados.map((processo) => {
     const inicio = processo[dataInicio] as string | null
     const fim = processo[dataFim] as string | null
 
-    const dias = calcularDias(inicio, fim)
+    const horas = calcularHoras(inicio, fim)
+    const dias = Number((horas / 24).toFixed(2))
 
-    const farol: StatusPrazo = !inicio
-      ? 'Pendente'
-      : classificarPrazo(dias)
+    const modal = identificarModal(processo.modal)
+
+    let farol: StatusPrazo = 'Pendente'
+
+    if (inicio && modal) {
+      farol = classificarPrazoPorHoras(
+        horas,
+        slaPorModal[modal],
+      )
+    }
 
     return {
       ...processo,
+      horas,
       dias,
       farol,
     }

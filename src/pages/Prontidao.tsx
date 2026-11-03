@@ -1,10 +1,30 @@
 import { ControleOperacional } from '../components/dashboard/ControleOperacional'
-
 import { mockProntidao } from '../data/mockProntidao'
-
 import { calcularProcessos } from '../utils/calcularStatus'
 
 import type { ConfiguracaoControle } from '../types/controle'
+import type { ConfiguracaoSla } from '../types/metricas'
+
+// Configuração provisória baseada nas regras atuais da Prontidão.
+// Os valores definitivos serão preenchidos pela planilha de SLAs.
+
+const slaProntidao: ConfiguracaoSla = {
+  'Aéreo': {
+    verdeAteHoras: 24,
+    atencaoAteHoras: 48,
+    alertaAteHoras: 96,
+  },
+  'Marítimo': {
+    verdeAteHoras: 24,
+    atencaoAteHoras: 48,
+    alertaAteHoras: 96,
+  },
+  'Rodoviário': {
+    verdeAteHoras: 24,
+    atencaoAteHoras: 48,
+    alertaAteHoras: 96,
+  },
+}
 
 const colunas = [
   { chave: 'status', titulo: 'Status' },
@@ -15,22 +35,25 @@ const colunas = [
   { chave: 'categoria', titulo: 'Categoria' },
   { chave: 'exportador', titulo: 'Exportador' },
   { chave: 'modal', titulo: 'Modal' },
+  { chave: 'horas', titulo: 'Horas' },
   { chave: 'dias', titulo: 'Dias' },
   { chave: 'farol', titulo: 'Farol' },
 ] as const
 
 const configRecebimento: ConfiguracaoControle = {
-  titulo: 'Controle de Recebimento de Proforma',
+  titulo: 'ENVIO DO PEDIDO X DISPONIBILIDADE',
   dataInicio: 'data_recebimento_pedido',
-  dataFim: 'data_recebimento_proforma',
+  dataFim: 'data_disponibilidade',
   colunas: [...colunas],
+  slaPorModal: slaProntidao,
 }
 
 const configConferencia: ConfiguracaoControle = {
-  titulo: 'Controle de Conferência de Proforma',
-  dataInicio: 'data_recebimento_proforma',
+  titulo: 'DISPONIBILIDADE X PICK UP',
+  dataInicio: 'data_disponibilidade',
   dataFim: 'data_conferencia_proforma',
   colunas: [...colunas],
+  slaPorModal: slaProntidao,
 }
 
 export function Prontidao() {
@@ -38,17 +61,18 @@ export function Prontidao() {
     mockProntidao,
     configRecebimento.dataInicio,
     configRecebimento.dataFim,
+    configRecebimento.slaPorModal,
   )
 
   const dadosConferencia = calcularProcessos(
     mockProntidao,
     configConferencia.dataInicio,
     configConferencia.dataFim,
+    configConferencia.slaPorModal,
   )
 
   return (
     <div className="space-y-5">
-
       <ControleOperacional
         dados={dadosRecebimento}
         configuracao={configRecebimento}
@@ -58,7 +82,6 @@ export function Prontidao() {
         dados={dadosConferencia}
         configuracao={configConferencia}
       />
-
     </div>
   )
 }

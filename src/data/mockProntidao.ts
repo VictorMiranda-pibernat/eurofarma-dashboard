@@ -13,6 +13,8 @@ export const mockProntidao: ProcessoImportacao[] = [
     data_recebimento_pedido: '2026-08-09',
     data_recebimento_proforma: null,
     data_conferencia_proforma: null,
+    data_disponibilidade: '2026-10-20T14:00:00',
+    
   },
   {
     status: 'Concluído',
@@ -26,6 +28,7 @@ export const mockProntidao: ProcessoImportacao[] = [
     data_recebimento_pedido: '2026-10-16',
     data_recebimento_proforma: '2026-10-18',
     data_conferencia_proforma: '2026-10-19',
+    data_disponibilidade: '2026-10-20T14:00:00',
   },
   {
     status: 'Concluído',
@@ -39,6 +42,7 @@ export const mockProntidao: ProcessoImportacao[] = [
     data_recebimento_pedido: '2026-10-20',
     data_recebimento_proforma: '2026-10-21',
     data_conferencia_proforma: '2026-10-22',
+    data_disponibilidade: '2026-10-20T14:00:00',
   },
   {
     status: 'Pendente',
@@ -52,6 +56,7 @@ export const mockProntidao: ProcessoImportacao[] = [
     data_recebimento_pedido: '2026-10-12',
     data_recebimento_proforma: null,
     data_conferencia_proforma: null,
+    data_disponibilidade: null,
   },
   {
     status: 'Concluído',
@@ -65,6 +70,7 @@ export const mockProntidao: ProcessoImportacao[] = [
     data_recebimento_pedido: '2026-10-22',
     data_recebimento_proforma: '2026-10-23',
     data_conferencia_proforma: '2026-10-24',
+    data_disponibilidade: '2026-10-24T09:00:00',
   },
   {
     status: 'Pendente',
@@ -78,5 +84,7 @@ export const mockProntidao: ProcessoImportacao[] = [
     data_recebimento_pedido: '2026-10-19',
     data_recebimento_proforma: null,
     data_conferencia_proforma: null,
+    data_disponibilidade: null,
+ 
   },
 ]
