@@ -3,6 +3,7 @@ import {
   House,
   ClipboardList,
   ChartNoAxesCombined,
+  PackageCheck,
 } from 'lucide-react'
 
 type NavbarProps = {
@@ -18,6 +19,7 @@ export function Navbar({
     { nome: 'Home', icone: House },
     { nome: 'Prontidão', icone: ClipboardList },
     { nome: 'Indicadores', icone: ChartNoAxesCombined },
+    { nome: 'Desembaraço', icone: PackageCheck },
   ]
 
   return (
