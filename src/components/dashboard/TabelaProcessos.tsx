@@ -1,3 +1,4 @@
+
 import type {
   ProcessoComPrazo,
   ColunaTabela,
@@ -20,12 +21,17 @@ export function TabelaProcessos({
   dados,
   colunas,
 }: TabelaProcessosProps) {
+  // Esconde a coluna de horas em todas as páginas.
+  const colunasVisiveis = colunas.filter(
+    (coluna) => coluna.chave !== 'horas',
+  )
+
   return (
     <div className="mt-5 overflow-x-auto border-t border-[#343640] pt-6">
       <table className="w-full min-w-[1100px] border-collapse text-left text-xs">
         <thead>
           <tr className="bg-[#22242D] text-gray-300">
-            {colunas.map((coluna) => (
+            {colunasVisiveis.map((coluna) => (
               <th
                 key={coluna.chave}
                 className="border border-[#343640] px-3 py-3 font-medium"
@@ -42,9 +48,15 @@ export function TabelaProcessos({
               key={processo.numero_processo}
               className="border-b border-[#292B34] text-gray-200 hover:bg-[#20222A]"
             >
-              {colunas.map((coluna) => {
+              {colunasVisiveis.map((coluna) => {
                 const valor = processo[coluna.chave]
                 const ehStatus = coluna.chave === 'farol'
+
+                // Arredonda os dias para números inteiros.
+                const valorExibido =
+                  coluna.chave === 'dias' && valor !== null
+                    ? Math.round(Number(valor))
+                    : valor
 
                 return (
                   <td
@@ -60,7 +72,7 @@ export function TabelaProcessos({
                         {valor}
                       </span>
                     ) : (
-                      valor ?? '-'
+                      valorExibido ?? '-'
                     )}
                   </td>
                 )
@@ -71,7 +83,7 @@ export function TabelaProcessos({
           {dados.length === 0 && (
             <tr>
               <td
-                colSpan={colunas.length}
+                colSpan={colunasVisiveis.length}
                 className="py-8 text-center text-gray-500"
               >
                 Nenhum processo encontrado.
