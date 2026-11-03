@@ -4,6 +4,7 @@ import {
   ClipboardList,
   ChartNoAxesCombined,
   PackageCheck,
+  Truck,
 } from 'lucide-react'
 
 type NavbarProps = {
@@ -20,6 +21,7 @@ export function Navbar({
     { nome: 'Prontidão', icone: ClipboardList },
     { nome: 'Indicadores', icone: ChartNoAxesCombined },
     { nome: 'Desembaraço', icone: PackageCheck },
+    { nome: 'Logística e Entregas', icone: Truck },
   ]
 
   return (
@@ -32,11 +34,10 @@ export function Navbar({
           <button
             key={item.nome}
             onClick={() => onMudarPagina(item.nome)}
-            className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm transition ${
-              ativo
-                ? 'bg-[#343640] font-semibold text-white'
-                : 'text-gray-400 hover:bg-[#252731] hover:text-white'
-            }`}
+            className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm transition ${ativo
+              ? 'bg-[#343640] font-semibold text-white'
+              : 'text-gray-400 hover:bg-[#252731] hover:text-white'
+              }`}
           >
             <Icon size={15} />
             {item.nome}
