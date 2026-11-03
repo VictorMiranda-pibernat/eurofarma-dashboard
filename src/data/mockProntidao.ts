@@ -70,7 +70,7 @@ export const mockProntidao: ProcessoImportacao[] = [
     data_recebimento_pedido: '2026-10-22',
     data_recebimento_proforma: '2026-10-23',
     data_conferencia_proforma: '2026-10-24',
-    data_disponibilidade: '2026-10-24T09:00:00',
+    data_disponibilidade: '2026-10-24T10:00:00',
   },
   {
     status: 'Pendente',

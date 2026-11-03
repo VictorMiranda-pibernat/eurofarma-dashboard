@@ -7,15 +7,16 @@ import type {
 import type {
   ConfiguracaoSla,
   Modal,
+  CalendarioOperacional,
 } from '../types/metricas'
+
+import { calendarioPadrao } from '../types/metricas'
 
 function converterData(valor: string | null): Date | null {
   if (!valor) return null
 
   // Data brasileira: DD/MM/AAAA
-  const partesBR = valor.match(
-    /^(\d{2})\/(\d{2})\/(\d{4})$/,
-  )
+  const partesBR = valor.match(/^(\d{2})\/(\d{2})\/(\d{4})$/)
 
   if (partesBR) {
     return new Date(
@@ -26,9 +27,7 @@ function converterData(valor: string | null): Date | null {
   }
 
   // Data ISO sem horário: AAAA-MM-DD
-  const partesISO = valor.match(
-    /^(\d{4})-(\d{2})-(\d{2})$/,
-  )
+  const partesISO = valor.match(/^(\d{4})-(\d{2})-(\d{2})$/)
 
   if (partesISO) {
     return new Date(
@@ -44,21 +43,70 @@ function converterData(valor: string | null): Date | null {
   return Number.isNaN(data.getTime()) ? null : data
 }
 
-function calcularHoras(
+function formatarData(data: Date): string {
+  const ano = data.getFullYear()
+  const mes = String(data.getMonth() + 1).padStart(2, '0')
+  const dia = String(data.getDate()).padStart(2, '0')
+
+  return `${ano}-${mes}-${dia}`
+}
+
+function calcularHorasUteis(
   inicio: string | null,
   fim: string | null,
+  calendario: CalendarioOperacional,
 ): number {
   const dataInicio = converterData(inicio)
   const dataFim = fim ? converterData(fim) : new Date()
 
   if (!dataInicio || !dataFim) return 0
 
-  const diferenca =
-    dataFim.getTime() - dataInicio.getTime()
+  if (dataFim <= dataInicio) return 0
 
-  const horas = diferenca / (1000 * 60 * 60)
+  const feriados = new Set(calendario.feriados)
 
-  return Math.max(0, Number(horas.toFixed(2)))
+  let totalMilissegundos = 0
+
+  const diaAtual = new Date(
+    dataInicio.getFullYear(),
+    dataInicio.getMonth(),
+    dataInicio.getDate(),
+  )
+
+  while (diaAtual < dataFim) {
+    const diaSemana = diaAtual.getDay()
+    const dataFormatada = formatarData(diaAtual)
+
+    const diaConsiderado =
+      calendario.diasConsiderados.includes(diaSemana) &&
+      !feriados.has(dataFormatada)
+
+    if (diaConsiderado) {
+      const inicioDoDia = new Date(diaAtual)
+      const fimDoDia = new Date(diaAtual)
+      fimDoDia.setDate(fimDoDia.getDate() + 1)
+
+      const inicioContagem = Math.max(
+        dataInicio.getTime(),
+        inicioDoDia.getTime(),
+      )
+
+      const fimContagem = Math.min(
+        dataFim.getTime(),
+        fimDoDia.getTime(),
+      )
+
+      if (fimContagem > inicioContagem) {
+        totalMilissegundos += fimContagem - inicioContagem
+      }
+    }
+
+    diaAtual.setDate(diaAtual.getDate() + 1)
+  }
+
+  const horas = totalMilissegundos / (1000 * 60 * 60)
+
+  return Number(horas.toFixed(2))
 }
 
 function identificarModal(modal: string): Modal | null {
@@ -103,12 +151,13 @@ export function calcularProcessos(
   dataInicio: keyof ProcessoImportacao,
   dataFim: keyof ProcessoImportacao,
   slaPorModal: ConfiguracaoSla,
+  calendario: CalendarioOperacional = calendarioPadrao,
 ): ProcessoComPrazo[] {
   return dados.map((processo) => {
     const inicio = processo[dataInicio] as string | null
     const fim = processo[dataFim] as string | null
 
-    const horas = calcularHoras(inicio, fim)
+    const horas = calcularHorasUteis(inicio, fim, calendario)
     const dias = Number((horas / 24).toFixed(2))
 
     const modal = identificarModal(processo.modal)
