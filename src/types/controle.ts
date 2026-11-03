@@ -17,31 +17,20 @@ export type ProcessoImportacao = {
   data_conferencia_proforma: string | null
   data_disponibilidade: string | null
 
-  // 1. Recebimentos documentos x aprovação
+  // Indicadores da página Indicadores
   data_recebimento_documentos?: string | null
   data_aprovacao_documentos?: string | null
-
-  // 2. Recebimento draft conhecimento x aprovação
   data_recebimento_draft_conhecimento?: string | null
   data_aprovacao_draft_conhecimento?: string | null
-
-  // 3. Embarque x recebimento conhecimento original
   data_atd?: string | null
   data_recebimento_conhecimento_original?: string | null
-
-  // 4. Recebimento conhecimento original x protocolo LI
   data_protocolo_li?: string | null
-
-  // 5. Envio ID x emissão LI
   data_envio_id?: string | null
   data_emissao_li?: string | null
-
-  // 6. Emissão LI x pagamento GRU
   data_pagamento_gru?: string | null
-
-  // 8. Protocolo x deferimento LI
   data_deferimento_li?: string | null
-    // Etapas de desembaraço e pós-chegada
+
+  // Etapas de desembaraço e pós-chegada
   data_chegada_ata?: string | null
   data_presenca?: string | null
   data_registro_di?: string | null
@@ -51,6 +40,19 @@ export type ProcessoImportacao = {
   data_liberacao_transporte?: string | null
   data_saida_recinto?: string | null
   data_entrega_fabrica?: string | null
+
+  // Logística e faturamento
+  data_emissao_nf?: string | null
+  data_faturado?: string | null
+
+  // Gestão de containers e demurrage
+  data_devolucao_container?: string | null
+  data_inicio_demurrage?: string | null
+  valor_demurrage_usd?: number | null
+  valor_demurrage_brl?: number | null
+
+  // Armazenagem
+  data_entrada_recinto?: string | null
 
   // Identifica processos com ou sem LI
   possui_li?: boolean
