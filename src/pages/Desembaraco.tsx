@@ -1,8 +1,7 @@
-
 import { ControleOperacional } from '../components/dashboard/ControleOperacional'
-import { mockDesembaraco } from '../data/mockDesembaraco'
 import { mockDesembaracoMetricas } from '../data/mockDesembaracoMetricas'
 import { calcularProcessos } from '../utils/calcularStatus'
+import { useProcessos } from '../contexts/ProcessosContext'
 
 import type {
   ColunaTabela,
@@ -25,6 +24,9 @@ const colunasDesembaraco: ColunaTabela[] = [
 ]
 
 export function Desembaraco() {
+  const { getProcessosDesembaraco } = useProcessos()
+  const baseProcessos = getProcessosDesembaraco()
+
   return (
     <div className="space-y-6">
       <div>
@@ -39,18 +41,18 @@ export function Desembaraco() {
       </div>
 
       {mockDesembaracoMetricas.map((metrica) => {
-        let dadosFiltrados: ProcessoImportacao[] = mockDesembaraco
+        let dadosFiltrados: ProcessoImportacao[] = baseProcessos
 
         // Indicador 10: somente processos sem LI.
         if (metrica.id === 10) {
-          dadosFiltrados = mockDesembaraco.filter(
+          dadosFiltrados = baseProcessos.filter(
             (processo) => processo.possui_li === false,
           )
         }
 
         // Indicador 11: somente processos com LI.
         if (metrica.id === 11) {
-          dadosFiltrados = mockDesembaraco.filter(
+          dadosFiltrados = baseProcessos.filter(
             (processo) => processo.possui_li === true,
           )
         }

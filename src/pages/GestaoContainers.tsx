@@ -1,9 +1,8 @@
-
 import { ControleOperacional } from '../components/dashboard/ControleOperacional'
-import { mockGestaoContainers } from '../data/mockGestaoContainers'
 import { mockGestaoContainersMetricas } from '../data/mockGestaoContainersMetricas'
 import { calcularProcessos } from '../utils/calcularStatus'
 import { IndicadorDemurrageValores } from '../components/dashboard/IndicadorDemurrageValores'
+import { useProcessos } from '../contexts/ProcessosContext'
 
 import type {
     ColunaTabela,
@@ -26,6 +25,9 @@ const colunasContainers: ColunaTabela[] = [
 ]
 
 export function GestaoContainers() {
+    const { getProcessosGestaoContainers } = useProcessos()
+    const baseProcessos = getProcessosGestaoContainers()
+
     return (
         <div className="space-y-6">
             <div>
@@ -40,18 +42,18 @@ export function GestaoContainers() {
             </div>
 
             {mockGestaoContainersMetricas.map((metrica) => {
-                let dadosFiltrados: ProcessoImportacao[] = mockGestaoContainers
+                let dadosFiltrados: ProcessoImportacao[] = baseProcessos
 
                 // Indicador 1: somente processos marítimos.
                 if (metrica.id === 1) {
-                    dadosFiltrados = mockGestaoContainers.filter(
+                    dadosFiltrados = baseProcessos.filter(
                         (processo) => processo.modal === 'Marítimo',
                     )
                 }
 
                 // Indicador 2: somente processos marítimos e rodoviários.
                 if (metrica.id === 2) {
-                    dadosFiltrados = mockGestaoContainers.filter(
+                    dadosFiltrados = baseProcessos.filter(
                         (processo) =>
                             processo.modal === 'Marítimo' ||
                             processo.modal === 'Rodoviário',
@@ -82,12 +84,11 @@ export function GestaoContainers() {
                     />
                 )
             })}
-             <IndicadorDemurrageValores
-                    dados={mockGestaoContainers.filter(
-                        (processo) => processo.modal === 'Marítimo',
-                    )}
-                />
-
+            <IndicadorDemurrageValores
+                dados={baseProcessos.filter(
+                    (processo) => processo.modal === 'Marítimo',
+                )}
+            />
         </div>
     )
 }

@@ -1,8 +1,7 @@
-
 import { ControleOperacional } from '../components/dashboard/ControleOperacional'
-import { mockIndicadores } from '../data/mockIndicadores'
 import { mockMetricas } from '../data/mockMetricas'
 import { calcularProcessos } from '../utils/calcularStatus'
+import { useProcessos } from '../contexts/ProcessosContext'
 
 import type {
   ColunaTabela,
@@ -24,6 +23,9 @@ const colunasIndicadores: ColunaTabela[] = [
 ]
 
 export function Indicadores() {
+  const { getProcessosIndicadores } = useProcessos()
+  const listaProcessos = getProcessosIndicadores()
+
   return (
     <div className="space-y-6">
       <div>
@@ -38,7 +40,7 @@ export function Indicadores() {
 
       {mockMetricas.map((metrica) => {
         const dadosCalculados = calcularProcessos(
-          mockIndicadores,
+          listaProcessos,
           metrica.dataInicio,
           metrica.dataFim,
           metrica.slaPorModal,

@@ -1,8 +1,7 @@
-
 import { ControleOperacional } from '../components/dashboard/ControleOperacional'
-import { mockLogistica } from '../data/mockLogistica'
 import { mockLogisticaMetricas } from '../data/mockLogisticaMetricas'
 import { calcularProcessos } from '../utils/calcularStatus'
+import { useProcessos } from '../contexts/ProcessosContext'
 
 import type {
   ColunaTabela,
@@ -25,10 +24,9 @@ const colunasLogistica: ColunaTabela[] = [
 ]
 
 export function Logistica() {
-    console.log('Métricas de logística:', mockLogisticaMetricas)
-console.log('Dados de logística:', mockLogistica)
-console.log('Quantidade de indicadores:', mockLogisticaMetricas.length)
-console.log('Quantidade de processos:', mockLogistica.length)
+  const { getProcessosLogistica } = useProcessos()
+  const baseProcessos = getProcessosLogistica()
+
   return (
     <div className="space-y-6">
       <div>
@@ -43,18 +41,18 @@ console.log('Quantidade de processos:', mockLogistica.length)
       </div>
 
       {mockLogisticaMetricas.map((metrica) => {
-        let dadosFiltrados: ProcessoImportacao[] = mockLogistica
+        let dadosFiltrados: ProcessoImportacao[] = baseProcessos
 
         // Indicadores 2 e 4: somente processos sem LI.
         if (metrica.id === 2 || metrica.id === 4) {
-          dadosFiltrados = mockLogistica.filter(
+          dadosFiltrados = baseProcessos.filter(
             (processo) => processo.possui_li === false,
           )
         }
 
         // Indicadores 3 e 5: somente processos com LI.
         if (metrica.id === 3 || metrica.id === 5) {
-          dadosFiltrados = mockLogistica.filter(
+          dadosFiltrados = baseProcessos.filter(
             (processo) => processo.possui_li === true,
           )
         }

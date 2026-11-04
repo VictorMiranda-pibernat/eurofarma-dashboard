@@ -1,6 +1,6 @@
 import { ControleOperacional } from '../components/dashboard/ControleOperacional'
-import { mockProntidao } from '../data/mockProntidao'
 import { calcularProcessos } from '../utils/calcularStatus'
+import { useProcessos } from '../contexts/ProcessosContext'
 
 import type { ConfiguracaoControle } from '../types/controle'
 import type { ConfiguracaoSla } from '../types/metricas'
@@ -57,15 +57,18 @@ const configConferencia: ConfiguracaoControle = {
 }
 
 export function Prontidao() {
+  const { getProcessosProntidao } = useProcessos()
+  const listaProcessos = getProcessosProntidao()
+
   const dadosRecebimento = calcularProcessos(
-    mockProntidao,
+    listaProcessos,
     configRecebimento.dataInicio,
     configRecebimento.dataFim,
     configRecebimento.slaPorModal,
   )
 
   const dadosConferencia = calcularProcessos(
-    mockProntidao,
+    listaProcessos,
     configConferencia.dataInicio,
     configConferencia.dataFim,
     configConferencia.slaPorModal,

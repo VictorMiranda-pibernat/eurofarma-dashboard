@@ -1,7 +1,7 @@
 import { ControleOperacional } from '../components/dashboard/ControleOperacional'
-import { mockArmazenagemLeadTime } from '../data/mockArmazenagemLeadTime'
 import { mockArmazenagemLeadTimeMetricas } from '../data/mockArmazenagemLeadTimeMetricas'
 import { calcularProcessos } from '../utils/calcularStatus'
+import { useProcessos } from '../contexts/ProcessosContext'
 
 import type {
   ColunaTabela,
@@ -10,7 +10,7 @@ import type {
 } from '../types/controle'
 
 const colunasArmazenagemLeadTime: ColunaTabela[] = [
-  { chave: 'status', titulo: 'Situação do Processo' },
+  { chave: 'status', titulo: 'Status' },
   { chave: 'referencia_cliente', titulo: 'Referência' },
   { chave: 'numero_processo', titulo: 'Processo' },
   { chave: 'responsavel', titulo: 'Responsável' },
@@ -24,6 +24,9 @@ const colunasArmazenagemLeadTime: ColunaTabela[] = [
 ]
 
 export function ArmazenagemLeadTime() {
+  const { getProcessosArmazenagem } = useProcessos()
+  const baseProcessos = getProcessosArmazenagem()
+
   return (
     <div className="space-y-6">
       <div>
@@ -38,8 +41,7 @@ export function ArmazenagemLeadTime() {
       </div>
 
       {mockArmazenagemLeadTimeMetricas.map((metrica) => {
-        const dadosFiltrados: ProcessoImportacao[] =
-          mockArmazenagemLeadTime
+        const dadosFiltrados: ProcessoImportacao[] = baseProcessos
 
         const dadosCalculados = calcularProcessos(
           dadosFiltrados,
