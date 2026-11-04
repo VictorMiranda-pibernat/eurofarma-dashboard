@@ -1,0 +1,37 @@
+steps:
+  # 1. Build da imagem Docker
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/eurofarma-dashboard:$COMMIT_SHA'
+      - '.'
+
+  # 2. Push da imagem para o Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/eurofarma-dashboard:$COMMIT_SHA'
+
+  # 3. Deploy no Google Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'eurofarma-dashboard'
+      - '--image'
+      - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/eurofarma-dashboard:$COMMIT_SHA'
+      - '--region'
+      - 'southamerica-east1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--update-env-vars'
+      - 'BIGQUERY_PROJECT_ID=qualidade-poc,BIGQUERY_LOCATION=southamerica-east1,BIGQUERY_TABLE=warehouse-pibernat.SPA.EUROFARMA_CARDS'
+
+images:
+  - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/eurofarma-dashboard:$COMMIT_SHA'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
