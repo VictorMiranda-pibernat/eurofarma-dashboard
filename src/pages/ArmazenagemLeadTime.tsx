@@ -10,7 +10,7 @@ import type {
 } from '../types/controle'
 
 const colunasArmazenagemLeadTime: ColunaTabela[] = [
-  { chave: 'status', titulo: 'Status' },
+  { chave: 'status', titulo: 'Situação do Processo' },
   { chave: 'referencia_cliente', titulo: 'Referência' },
   { chave: 'numero_processo', titulo: 'Processo' },
   { chave: 'responsavel', titulo: 'Responsável' },
