@@ -27,71 +27,75 @@ export function TabelaProcessos({
   )
 
   return (
-    <div className="mt-5 overflow-x-auto border-t border-[#343640] pt-6">
-      <table className="w-full min-w-[1100px] border-collapse text-left text-xs">
-        <thead>
-          <tr className="bg-[#22242D] text-gray-300">
-            {colunasVisiveis.map((coluna) => (
-              <th
-                key={coluna.chave}
-                className="border border-[#343640] px-3 py-3 font-medium"
+    <div className="mt-5 border-t border-[#343640] pt-6">
+      {/* Área com rolagem independente */}
+      <div className="max-h-[420px] overflow-auto rounded-md">
+        <table className="w-full min-w-[1100px] border-separate border-spacing-0 text-left text-xs">
+          <thead>
+            <tr className="text-gray-300">
+              {colunasVisiveis.map((coluna) => (
+                <th
+                  key={coluna.chave}
+                  className="sticky top-0 z-10 border border-[#343640] bg-[#22242D] px-3 py-3 font-medium"
+                >
+                  {coluna.titulo}
+                </th>
+              ))}
+            </tr>
+          </thead>
+
+          <tbody>
+            {dados.map((processo) => (
+              <tr
+                key={processo.numero_processo}
+                className="text-gray-200 hover:bg-[#20222A]"
               >
-                {coluna.titulo}
-              </th>
+                {colunasVisiveis.map((coluna) => {
+                  const valor = processo[coluna.chave]
+                  const ehStatus = coluna.chave === 'farol'
+
+                  // Arredonda os dias para números inteiros.
+                  const valorExibido =
+                    coluna.chave === 'dias' && valor !== null
+                      ? Math.round(Number(valor))
+                      : valor
+
+                  return (
+                    <td
+                      key={coluna.chave}
+                      className="border-b border-[#292B34] px-3 py-3"
+                    >
+                      {ehStatus ? (
+                        <span
+                          className={`rounded-md px-2 py-1 font-medium ${
+                            coresStatus[String(valor)] ??
+                            'bg-gray-500/15 text-gray-400'
+                          }`}
+                        >
+                          {valor}
+                        </span>
+                      ) : (
+                        valorExibido ?? '-'
+                      )}
+                    </td>
+                  )
+                })}
+              </tr>
             ))}
-          </tr>
-        </thead>
 
-        <tbody>
-          {dados.map((processo) => (
-            <tr
-              key={processo.numero_processo}
-              className="border-b border-[#292B34] text-gray-200 hover:bg-[#20222A]"
-            >
-              {colunasVisiveis.map((coluna) => {
-                const valor = processo[coluna.chave]
-                const ehStatus = coluna.chave === 'farol'
-
-                // Arredonda os dias para números inteiros.
-                const valorExibido =
-                  coluna.chave === 'dias' && valor !== null
-                    ? Math.round(Number(valor))
-                    : valor
-
-                return (
-                  <td
-                    key={coluna.chave}
-                    className="px-3 py-3"
-                  >
-                    {ehStatus ? (
-                      <span
-                        className={`rounded-md px-2 py-1 font-medium ${
-                          coresStatus[String(valor)]
-                        }`}
-                      >
-                        {valor}
-                      </span>
-                    ) : (
-                      valorExibido ?? '-'
-                    )}
-                  </td>
-                )
-              })}
-            </tr>
-          ))}
-
-          {dados.length === 0 && (
-            <tr>
-              <td
-                colSpan={colunasVisiveis.length}
-                className="py-8 text-center text-gray-500"
-              >
-                Nenhum processo encontrado.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            {dados.length === 0 && (
+              <tr>
+                <td
+                  colSpan={colunasVisiveis.length}
+                  className="py-8 text-center text-gray-500"
+                >
+                  Nenhum processo encontrado.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }
