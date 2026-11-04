@@ -7,6 +7,7 @@ import { Indicadores } from './pages/Indicadores'
 import { Desembaraco } from './pages/Desembaraco'
 import { Logistica } from './pages/Logistica'
 import { GestaoContainers } from './pages/GestaoContainers'
+import { ArmazenagemLeadTime } from './pages/ArmazenagemLeadTime'
 
 function App() {
   const [paginaAtiva, setPaginaAtiva] = useState('Home')
@@ -19,6 +20,7 @@ function App() {
       {paginaAtiva === 'Desembaraço' && <Desembaraco />}
       {paginaAtiva === 'Logística e Entregas' && <Logistica />}
       {paginaAtiva === 'Gestão de Containers' && <GestaoContainers />}
+      {paginaAtiva === 'Armazenagem e Lead Time' && <ArmazenagemLeadTime />}
     </Layout>
   )
 }

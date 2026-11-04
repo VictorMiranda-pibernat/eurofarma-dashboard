@@ -6,6 +6,7 @@ import {
   PackageCheck,
   Truck,
   Container,
+  Warehouse,
 } from 'lucide-react'
 
 type NavbarProps = {
@@ -24,6 +25,7 @@ export function Navbar({
     { nome: 'Desembaraço', icone: PackageCheck },
     { nome: 'Logística e Entregas', icone: Truck },
     { nome: 'Gestão de Containers', icone: Container },
+    { nome: 'Armazenagem e Lead Time', icone: Warehouse },
   ]
 
   return (
