@@ -8,11 +8,15 @@ import { TabelaProcessos } from './TabelaProcessos'
 import type {
   ProcessoComPrazo,
   ConfiguracaoControle,
-} from '../../types/controle' 
+} from '../../types/controle'
 
 type ControleOperacionalProps = {
   dados: ProcessoComPrazo[]
   configuracao: ConfiguracaoControle
+}
+
+function normalizarTexto(valor: string | null | undefined): string {
+  return valor?.trim() ?? ''
 }
 
 export function ControleOperacional({
@@ -26,10 +30,10 @@ export function ControleOperacional({
 
   const dadosFiltrados = useMemo(() => {
     return dados.filter((processo) => (
-      (!planta || processo.planta === planta) &&
-      (!modal || processo.modal === modal) &&
-      (!categoria || processo.categoria === categoria) &&
-      (!responsavel || processo.responsavel === responsavel)
+      (!planta || normalizarTexto(processo.planta) === planta) &&
+      (!modal || normalizarTexto(processo.modal) === modal) &&
+      (!categoria || normalizarTexto(processo.categoria) === categoria) &&
+      (!responsavel || normalizarTexto(processo.responsavel) === responsavel)
     ))
   }, [dados, planta, modal, categoria, responsavel])
 
@@ -44,10 +48,10 @@ export function ControleOperacional({
   }
 
   const opcoes = {
-    planta: [...new Set(dados.map((item) => item.planta))],
-    modal: [...new Set(dados.map((item) => item.modal))],
-    categoria: [...new Set(dados.map((item) => item.categoria))],
-    responsavel: [...new Set(dados.map((item) => item.responsavel))],
+    planta: [...new Set( dados.map((item) => normalizarTexto(item.planta)).filter(Boolean) )],
+    modal: [...new Set( dados.map((item) => normalizarTexto(item.modal)).filter(Boolean) )],
+    categoria: [...new Set( dados.map((item) => normalizarTexto(item.categoria)).filter(Boolean))],
+    responsavel: [...new Set(dados.map((item) => normalizarTexto(item.responsavel)).filter(Boolean))],
   }
 
   const classesSelect =
