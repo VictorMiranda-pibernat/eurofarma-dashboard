@@ -27,15 +27,28 @@ export function ControleOperacional({
   const [modal, setModal] = useState('')
   const [categoria, setCategoria] = useState('')
   const [responsavel, setResponsavel] = useState('')
+  const [situacaoPrazo, setSituacaoPrazo] = useState('')
 
   const dadosFiltrados = useMemo(() => {
     return dados.filter((processo) => (
       (!planta || normalizarTexto(processo.planta) === planta) &&
       (!modal || normalizarTexto(processo.modal) === modal) &&
       (!categoria || normalizarTexto(processo.categoria) === categoria) &&
-      (!responsavel || normalizarTexto(processo.responsavel) === responsavel)
+      (!responsavel || normalizarTexto(processo.responsavel) === responsavel) &&
+      (
+        !situacaoPrazo ||
+        (situacaoPrazo === 'Prazo' &&
+          processo.farol === 'Dentro do Prazo') ||
+        (situacaoPrazo === 'Atraso' &&
+          processo.farol === 'Atraso') ||
+        (situacaoPrazo === 'Alerta' &&
+          (processo.farol === 'Atenção' ||
+            processo.farol === 'Alerta')) ||
+        (situacaoPrazo === 'Pendente' &&
+          processo.farol === 'Pendente')
+      )
     ))
-  }, [dados, planta, modal, categoria, responsavel])
+  }, [dados, planta, modal, categoria, responsavel, situacaoPrazo])
 
   const quantidade = (status: string) =>
     dadosFiltrados.filter((item) => item.farol === status).length
@@ -48,9 +61,9 @@ export function ControleOperacional({
   }
 
   const opcoes = {
-    planta: [...new Set( dados.map((item) => normalizarTexto(item.planta)).filter(Boolean) )],
-    modal: [...new Set( dados.map((item) => normalizarTexto(item.modal)).filter(Boolean) )],
-    categoria: [...new Set( dados.map((item) => normalizarTexto(item.categoria)).filter(Boolean))],
+    planta: [...new Set(dados.map((item) => normalizarTexto(item.planta)).filter(Boolean))],
+    modal: [...new Set(dados.map((item) => normalizarTexto(item.modal)).filter(Boolean))],
+    categoria: [...new Set(dados.map((item) => normalizarTexto(item.categoria)).filter(Boolean))],
     responsavel: [...new Set(dados.map((item) => normalizarTexto(item.responsavel)).filter(Boolean))],
   }
 
@@ -109,6 +122,18 @@ export function ControleOperacional({
           {opcoes.responsavel.map((item) => (
             <option key={item}>{item}</option>
           ))}
+        </select>
+
+        <select
+          className={classesSelect + ' flex-1'}
+          value={situacaoPrazo}
+          onChange={(e) => setSituacaoPrazo(e.target.value)}
+        >
+          <option value="">Todas as situações</option>
+          <option value="Prazo">Prazo</option>
+          <option value="Atraso">Atraso</option>
+          <option value="Alerta">Alerta</option>
+          <option value="Pendente">Pendente</option>
         </select>
 
         <button
