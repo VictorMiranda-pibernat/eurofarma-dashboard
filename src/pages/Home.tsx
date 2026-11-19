@@ -6,7 +6,7 @@ function Home() {
       <section
         className="
           absolute inset-y-0 left-0 z-10
-          w-[63%] bg-[#07519A]
+          w-[70%] bg-[#07519A]
           rounded-br-[38%_100%]
           shadow-[12px_5px_18px_rgba(0,0,0,0.28)]
           max-md:w-full
@@ -27,15 +27,10 @@ function Home() {
         </p>
       </section>
 
-      {/* Logo e linha vertical */}
-      <section className="absolute bottom-[7%] right-[4%] z-20 flex w-[29%] items-center justify-between max-md:bottom-[5%] max-md:right-[8%] max-md:w-[75%]">
-        <img
-          src="/images/eurofarma_logo.png"
-          alt="Eurofarma"
-          className="block h-auto w-[82%] max-w-[330px] object-contain max-md:max-w-[250px]"
-        />
-
-        <div className="h-[100px] w-0.5 shrink-0 bg-[#07519A] max-md:h-[65px]" />
+      {/* Logos Eurofarma e Pibernat */}
+      <section className="absolute left-[63%] right-[3%] top-1/2 z-20 flex -translate-y-1/2 flex-col items-center justify-center gap-10 max-md:left-1/2 max-md:right-auto max-md:top-auto max-md:bottom-[5%] max-md:w-[55%] max-md:-translate-x-1/2 max-md:translate-y-0 max-md:gap-5 max-md:rounded-xl max-md:bg-white max-md:p-4">
+        <img src="/images/eurofarma_logo.png" alt="Eurofarma" className="block h-auto w-[72%] max-w-[280px] object-contain max-md:w-[85%]" />
+        <img src="/images/piber_logo.png" alt="Pibernat" className="block h-auto w-[72%] max-w-[280px] object-contain max-md:w-[85%]" />
       </section>
 
     </main>
