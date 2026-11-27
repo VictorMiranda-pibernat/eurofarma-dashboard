@@ -191,4 +191,57 @@ export function calcularProcessos(
       farol,
     }
   })
+
+
+
+}
+
+
+export function calcularVencimentoArmazenagem(
+  dados: ProcessoImportacao[],
+  slaPorModal: ConfiguracaoSla,
+): ProcessoComPrazo[] {
+  const hoje = new Date()
+  hoje.setHours(0, 0, 0, 0)
+
+  return dados.map((processo) => {
+    const vencimento = converterData(
+      processo.data_vencimento_armazenagem ?? null,
+    )
+    const modal = identificarModal(processo.modal)
+
+    let horas = 0
+    let dias = 0
+    let farol: StatusPrazo = 'Pendente'
+
+    if (vencimento && modal) {
+      vencimento.setHours(0, 0, 0, 0)
+
+      const diferencaMs = vencimento.getTime() - hoje.getTime()
+      dias = Number((diferencaMs / (1000 * 60 * 60 * 24)).toFixed(2))
+      horas = Number((dias * 24).toFixed(2))
+
+      const faixas = slaPorModal[modal]
+      const { verdeAteHoras, atencaoAteHoras, alertaAteHoras } = faixas
+
+      if (dias < 0) {
+        farol = 'Atraso'
+      } else if (horas <= verdeAteHoras) {
+        farol = 'Alerta'
+      } else if (horas <= atencaoAteHoras) {
+        farol = 'Atenção'
+      } else if (horas <= alertaAteHoras) {
+        farol = 'Alerta'
+      } else {
+        farol = 'Dentro do Prazo'
+      }
+    }
+
+    return {
+      ...processo,
+      horas,
+      dias,
+      farol,
+    }
+  })
 }

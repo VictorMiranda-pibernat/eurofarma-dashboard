@@ -2,6 +2,21 @@
 import type { ConfiguracaoSla } from './metricas'
 
 export type ProcessoImportacao = {
+
+  // Novos campos da base EUROFARMA_PROCESSOS
+  referencia_pibernat?: string | null
+  responsavel_abertura?: string | null
+  status_embarque?: string | null
+  nome_exportador?: string | null
+  importador?: string | null
+  recinto_alfandegado?: string | null
+  parametrizacao?: string | null
+  status_liberacao_carga?: string | null
+  data_recebimento_danfe?: string | null
+  data_chegada_destino?: string | null
+  free_time_demurrage?: number | null
+
+
   status: string
   referencia_cliente: string
   numero_processo: string
@@ -53,9 +68,10 @@ export type ProcessoImportacao = {
 
   // Armazenagem
   data_entrada_recinto?: string | null
+  data_vencimento_armazenagem?: string | null
 
   // Identifica processos com ou sem LI
-  possui_li?: boolean
+  possui_li?: boolean | null
 }
 
 export type StatusPrazo =

@@ -1,6 +1,6 @@
 import { ControleOperacional } from '../components/dashboard/ControleOperacional'
 import { mockArmazenagemLeadTimeMetricas } from '../data/mockArmazenagemLeadTimeMetricas'
-import { calcularProcessos } from '../utils/calcularStatus'
+import { calcularProcessos, calcularVencimentoArmazenagem, } from '../utils/calcularStatus'
 import { useProcessos } from '../contexts/ProcessosContext'
 
 import type {
@@ -43,13 +43,19 @@ export function ArmazenagemLeadTime() {
       {mockArmazenagemLeadTimeMetricas.map((metrica) => {
         const dadosFiltrados: ProcessoImportacao[] = baseProcessos
 
-        const dadosCalculados = calcularProcessos(
-          dadosFiltrados,
-          metrica.dataInicio,
-          metrica.dataFim,
-          metrica.slaPorModal,
-          metrica.calendarioPorModal,
-        )
+        const dadosCalculados =
+          metrica.titulo === 'VENCIMENTO DE ARMAZENAGEM'
+            ? calcularVencimentoArmazenagem(
+              dadosFiltrados,
+              metrica.slaPorModal,
+            )
+            : calcularProcessos(
+              dadosFiltrados,
+              metrica.dataInicio,
+              metrica.dataFim,
+              metrica.slaPorModal,
+              metrica.calendarioPorModal,
+            )
 
         const configuracao: ConfiguracaoControle = {
           titulo: metrica.titulo,
