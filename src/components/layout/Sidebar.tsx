@@ -1,4 +1,4 @@
-import { LayoutDashboard, ClipboardCheck } from 'lucide-react'
+import { LayoutDashboard} from 'lucide-react'
 
 type SidebarProps = {
   paginaAtiva: string
@@ -14,10 +14,10 @@ export function Sidebar({
       nome: 'Home',
       icone: LayoutDashboard,
     },
-    {
-      nome: 'Prontidão',
-      icone: ClipboardCheck,
-    },
+    // {
+    //   nome: 'Prontidão',
+    //   icone: ClipboardCheck,
+    // },
   ]
 
   return (

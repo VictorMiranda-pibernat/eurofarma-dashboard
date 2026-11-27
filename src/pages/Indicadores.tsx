@@ -38,31 +38,33 @@ export function Indicadores() {
         </p>
       </div>
 
-      {mockMetricas.map((metrica) => {
-        const dadosCalculados = calcularProcessos(
-          listaProcessos,
-          metrica.dataInicio,
-          metrica.dataFim,
-          metrica.slaPorModal,
-          metrica.calendarioPorModal,
-        )
+      {mockMetricas
+        .filter((metrica) => [1, 2, 3].includes(metrica.id))
+        .map((metrica) => {
+          const dadosCalculados = calcularProcessos(
+            listaProcessos,
+            metrica.dataInicio,
+            metrica.dataFim,
+            metrica.slaPorModal,
+            metrica.calendarioPorModal,
+          )
 
-        const configuracao: ConfiguracaoControle = {
-          titulo: metrica.titulo,
-          dataInicio: metrica.dataInicio,
-          dataFim: metrica.dataFim,
-          colunas: colunasIndicadores,
-          slaPorModal: metrica.slaPorModal,
-        }
+          const configuracao: ConfiguracaoControle = {
+            titulo: metrica.titulo,
+            dataInicio: metrica.dataInicio,
+            dataFim: metrica.dataFim,
+            colunas: colunasIndicadores,
+            slaPorModal: metrica.slaPorModal,
+          }
 
-        return (
-          <ControleOperacional
-            key={metrica.id}
-            dados={dadosCalculados}
-            configuracao={configuracao}
-          />
-        )
-      })}
+          return (
+            <ControleOperacional
+              key={metrica.id}
+              dados={dadosCalculados}
+              configuracao={configuracao}
+            />
+          )
+        })}
     </div>
   )
 }

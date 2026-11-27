@@ -66,11 +66,21 @@ export function ArmazenagemLeadTime() {
         }
 
         return (
-          <ControleOperacional
-            key={metrica.id}
-            dados={dadosCalculados}
-            configuracao={configuracao}
-          />
+          <div key={metrica.id} className="space-y-2">
+            {metrica.titulo === 'VENCIMENTO DE ARMAZENAGEM' && (
+              <p className="rounded-lg border border-yellow-400/20 bg-yellow-400/10 px-4 py-3 text-sm text-yellow-400">
+                <strong>Atenção:</strong> Este indicador considera os vencimentos
+                de armazenagem registrados na base. É necessário validar se os
+                processos que já tiveram saída do recinto devem continuar sendo
+                considerados como vencidos.
+              </p>
+            )}
+
+            <ControleOperacional
+              dados={dadosCalculados}
+              configuracao={configuracao}
+            />
+          </div>
         )
       })}
     </div>

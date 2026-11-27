@@ -40,47 +40,49 @@ export function Logistica() {
         </p>
       </div>
 
-      {mockLogisticaMetricas.map((metrica) => {
-        let dadosFiltrados: ProcessoImportacao[] = baseProcessos
+      {mockLogisticaMetricas
+        .filter((metrica) => [1].includes(metrica.id))
+        .map((metrica) => {
+          let dadosFiltrados: ProcessoImportacao[] = baseProcessos
 
-        // Indicadores 2 e 4: somente processos sem LI.
-        if (metrica.id === 2 || metrica.id === 4) {
-          dadosFiltrados = baseProcessos.filter(
-            (processo) => processo.possui_li === false,
+          // Indicadores 2 e 4: somente processos sem LI.
+          if (metrica.id === 2 || metrica.id === 4) {
+            dadosFiltrados = baseProcessos.filter(
+              (processo) => processo.possui_li === false,
+            )
+          }
+
+          // Indicadores 3 e 5: somente processos com LI.
+          if (metrica.id === 3 || metrica.id === 5) {
+            dadosFiltrados = baseProcessos.filter(
+              (processo) => processo.possui_li === true,
+            )
+          }
+
+          const dadosCalculados = calcularProcessos(
+            dadosFiltrados,
+            metrica.dataInicio,
+            metrica.dataFim,
+            metrica.slaPorModal,
+            metrica.calendarioPorModal,
           )
-        }
 
-        // Indicadores 3 e 5: somente processos com LI.
-        if (metrica.id === 3 || metrica.id === 5) {
-          dadosFiltrados = baseProcessos.filter(
-            (processo) => processo.possui_li === true,
+          const configuracao: ConfiguracaoControle = {
+            titulo: metrica.titulo,
+            dataInicio: metrica.dataInicio,
+            dataFim: metrica.dataFim,
+            colunas: colunasLogistica,
+            slaPorModal: metrica.slaPorModal,
+          }
+
+          return (
+            <ControleOperacional
+              key={metrica.id}
+              dados={dadosCalculados}
+              configuracao={configuracao}
+            />
           )
-        }
-
-        const dadosCalculados = calcularProcessos(
-          dadosFiltrados,
-          metrica.dataInicio,
-          metrica.dataFim,
-          metrica.slaPorModal,
-          metrica.calendarioPorModal,
-        )
-
-        const configuracao: ConfiguracaoControle = {
-          titulo: metrica.titulo,
-          dataInicio: metrica.dataInicio,
-          dataFim: metrica.dataFim,
-          colunas: colunasLogistica,
-          slaPorModal: metrica.slaPorModal,
-        }
-
-        return (
-          <ControleOperacional
-            key={metrica.id}
-            dados={dadosCalculados}
-            configuracao={configuracao}
-          />
-        )
-      })}
+        })}
     </div>
   )
 }

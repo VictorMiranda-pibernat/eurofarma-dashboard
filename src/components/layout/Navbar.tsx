@@ -1,6 +1,5 @@
 import {
   House,
-  ClipboardList,
   ChartNoAxesCombined,
   PackageCheck,
   Truck,
@@ -24,7 +23,7 @@ export function Navbar({
 
   const itens = [
     { nome: 'Home', icone: House },
-    { nome: 'Prontidão', icone: ClipboardList },
+    // { nome: 'Prontidão', icone: ClipboardList },
     { nome: 'Indicadores', icone: ChartNoAxesCombined },
     { nome: 'Desembaraço', icone: PackageCheck },
     { nome: 'Logística e Entregas', icone: Truck },

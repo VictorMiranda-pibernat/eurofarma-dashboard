@@ -1,7 +1,7 @@
 import { ControleOperacional } from '../components/dashboard/ControleOperacional'
 import { mockGestaoContainersMetricas } from '../data/mockGestaoContainersMetricas'
 import { calcularProcessos } from '../utils/calcularStatus'
-import { IndicadorDemurrageValores } from '../components/dashboard/IndicadorDemurrageValores'
+// import { IndicadorDemurrageValores } from '../components/dashboard/IndicadorDemurrageValores'
 import { useProcessos } from '../contexts/ProcessosContext'
 
 import type {
@@ -41,54 +41,56 @@ export function GestaoContainers() {
                 </p>
             </div>
 
-            {mockGestaoContainersMetricas.map((metrica) => {
-                let dadosFiltrados: ProcessoImportacao[] = baseProcessos
+            {mockGestaoContainersMetricas
+                .filter((metrica) => [1].includes(metrica.id))
+                .map((metrica) => {
+                    let dadosFiltrados: ProcessoImportacao[] = baseProcessos
 
-                // Indicador 1: somente processos marítimos.
-                if (metrica.id === 1) {
-                    dadosFiltrados = baseProcessos.filter(
-                        (processo) => processo.modal === 'Marítimo',
+                    // Indicador 1: somente processos marítimos.
+                    if (metrica.id === 1) {
+                        dadosFiltrados = baseProcessos.filter(
+                            (processo) => processo.modal === 'Marítimo',
+                        )
+                    }
+
+                    // Indicador 2: somente processos marítimos e rodoviários.
+                    if (metrica.id === 2) {
+                        dadosFiltrados = baseProcessos.filter(
+                            (processo) =>
+                                processo.modal === 'Marítimo' ||
+                                processo.modal === 'Rodoviário',
+                        )
+                    }
+
+                    const dadosCalculados = calcularProcessos(
+                        dadosFiltrados,
+                        metrica.dataInicio,
+                        metrica.dataFim,
+                        metrica.slaPorModal,
+                        metrica.calendarioPorModal,
                     )
-                }
 
-                // Indicador 2: somente processos marítimos e rodoviários.
-                if (metrica.id === 2) {
-                    dadosFiltrados = baseProcessos.filter(
-                        (processo) =>
-                            processo.modal === 'Marítimo' ||
-                            processo.modal === 'Rodoviário',
+                    const configuracao: ConfiguracaoControle = {
+                        titulo: metrica.titulo,
+                        dataInicio: metrica.dataInicio,
+                        dataFim: metrica.dataFim,
+                        colunas: colunasContainers,
+                        slaPorModal: metrica.slaPorModal,
+                    }
+
+                    return (
+                        <ControleOperacional
+                            key={metrica.id}
+                            dados={dadosCalculados}
+                            configuracao={configuracao}
+                        />
                     )
-                }
-
-                const dadosCalculados = calcularProcessos(
-                    dadosFiltrados,
-                    metrica.dataInicio,
-                    metrica.dataFim,
-                    metrica.slaPorModal,
-                    metrica.calendarioPorModal,
-                )
-
-                const configuracao: ConfiguracaoControle = {
-                    titulo: metrica.titulo,
-                    dataInicio: metrica.dataInicio,
-                    dataFim: metrica.dataFim,
-                    colunas: colunasContainers,
-                    slaPorModal: metrica.slaPorModal,
-                }
-
-                return (
-                    <ControleOperacional
-                        key={metrica.id}
-                        dados={dadosCalculados}
-                        configuracao={configuracao}
-                    />
-                )
-            })}
-            <IndicadorDemurrageValores
+                })}
+            {/* <IndicadorDemurrageValores
                 dados={baseProcessos.filter(
                     (processo) => processo.modal === 'Marítimo',
                 )}
-            />
+            /> */}
         </div>
     )
 }
